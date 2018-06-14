@@ -31,7 +31,7 @@ export class LoginPage {
 
   login() {
     console.log("Login Function");
-    this.itemsCollection = this.afs.collection<usuario>('usuarios', ref => ref.where('nombre', '==', this.usuario_nombre));
+    this.itemsCollection = this.afs.collection<usuario>('usuarios', ref => ref.where('nombre', '==', this.usuario_nombre.toLowerCase() ));
     this.items = this.itemsCollection.snapshotChanges().map(actions => {
       return actions.map(a => {
         const data = a.payload.doc.data() as usuario;

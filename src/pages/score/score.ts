@@ -15,20 +15,20 @@ import { OtroPage } from '../otro/otro';
 })
 export class ScorePage {
   userSelected: usuario;
-  
+
   usuariosCollection: AngularFirestoreCollection<usuario>;
   usuariosObservable: Observable<usuario[]>;
   usuarios: usuario[] = [];
-  
+
   prediccionesCollection: AngularFirestoreCollection<prediccion>;
   prediccionesObservable: Observable<prediccion[]>;
   predicciones: prediccion[] = [];
 
   partidosCollection: AngularFirestoreCollection<Partido>;
   partidosObservable: Observable<Partido[]>;
-  resultados : Partido[] = [];
+  resultados: Partido[] = [];
 
-  
+
   constructor(public navCtrl: NavController, public navParams: NavParams, private afs: AngularFirestore, public modalCtrl: ModalController) {
     // get usuario from params
     this.userSelected = this.navParams.get('user');
@@ -60,44 +60,54 @@ export class ScorePage {
         return { id, ...data };
       });
     });
-    this.usuariosObservable.subscribe(usuarios_observable => {
-      usuarios_observable.forEach(usuario => 
-      {
-        let puntaje: number = 0;
-        let predicciones_x_usuario = this.predicciones.filter(predicciones => predicciones.usuario === usuario.id);
-        predicciones_x_usuario.forEach( prediccion => {
-          let resultados_concretados = this.resultados.filter(x=> x.jugado === true);
-          resultados_concretados.forEach( resultado => {
-            let partido_jugado = prediccion.partidos.find( x=> x.partido == resultado.id);
-            if (partido_jugado) {
-              //si el jugador adivino el resultado
-             if (partido_jugado.goles1 == resultado.goles1 && partido_jugado.goles2 == resultado.goles2) {
-                puntaje = puntaje + 3;
-              } else {
-                if ((partido_jugado.goles1 > partido_jugado.goles2) == (resultado.goles1 > resultado.goles2)) {
-                  puntaje = puntaje + 1;
-                }else if(partido_jugado.goles1 == partido_jugado.goles2 && resultado.goles1 == resultado.goles2){
-                  puntaje = puntaje + 1;
-                }
-              }
-           }
-          })
-        });
-        usuario['puntaje'] = puntaje;
-        console.log(usuario);
-        this.usuarios.push(usuario);      
-      });
-    });
+    
+  
 
 
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad ScorePage');
+
+    // Calcular Puntajes
+    this.usuariosObservable.subscribe(usuarios_observable => {
+      usuarios_observable.forEach(usuario => {
+        let puntaje: number = 0;
+        let predicciones_x_usuario = this.predicciones.filter(predicciones => predicciones.usuario === usuario.id);
+        
+        predicciones_x_usuario.forEach(prediccion => {
+          let resultados_concretados = this.resultados
+            .filter(x => x.jugado === true)
+            .forEach(resultado => {
+              let partido_jugado = prediccion.partidos.find(x => x.partido == resultado.id);
+              if (partido_jugado) {
+                //si el jugador adivino el resultado
+                if (partido_jugado.goles1 == resultado.goles1 && partido_jugado.goles2 == resultado.goles2) {
+                  puntaje = puntaje + 3;
+                } else {
+                  if ((partido_jugado.goles1 > partido_jugado.goles2) == (resultado.goles1 > resultado.goles2)) {
+                    puntaje = puntaje + 1;
+                  } else if (partido_jugado.goles1 == partido_jugado.goles2 && resultado.goles1 == resultado.goles2) {
+                    puntaje = puntaje + 1;
+                  }
+                }
+              }
+            });
+        });
+
+        usuario['puntaje'] = puntaje;
+        if (this.predicciones.length > 0) {
+          this.usuarios.push(usuario);  
+        }
+      });
+    }, error => {
+      console.log(error);
+    });
+
   }
 
   CargarPrediccionesOtros(user_selected: usuario) {
-    const modal = this.modalCtrl.create(OtroPage, { user: user_selected});
+    const modal = this.modalCtrl.create(OtroPage, { user: user_selected });
     modal.present();
   }
 

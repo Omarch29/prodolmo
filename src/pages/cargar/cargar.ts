@@ -29,6 +29,7 @@ export class CargarPage {
   categoria_id: string;
   userSelected: usuario;
   PoseeDatosCargados: boolean = false;
+  
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
     private afs: AngularFirestore,
@@ -198,6 +199,7 @@ export class CargarPage {
     }
 
     this.prediccionesCollection.add(nuevaPrediccion).then( ()=> {
+      this.verificar_predicciones_cargadas_por_categoria(this.categoria_id);
       this.toastCtrl.create({
         message: 'Datos guardados correctamente',
         position: 'middle',
