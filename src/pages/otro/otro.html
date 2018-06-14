@@ -1,0 +1,49 @@
+<ion-header>
+
+  <ion-navbar>
+    <button ion-button small round icon-start color="danger" (click)="cerrar()">
+      <ion-icon name="md-close"></ion-icon>
+      volver
+    </button>
+    <ion-title color="dark">Predicciones de {{userSelected.nombre}}</ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content padding>
+  <ion-item>
+    <ion-thumbnail large item-start>
+      <img [src]="userSelected.imagen">
+    </ion-thumbnail>
+    <h2> Estas viendo las predicciones de {{userSelected.nombre}}</h2>
+    <p> con esa cara no puede ganar.</p>
+    <ion-note text-wrap>terrible naipe, las tuyas seguro son mejores.</ion-note>
+  </ion-item>
+
+  <ion-card *ngFor="let partido of resultados ; index as i;">
+    <ion-card-header>
+      Partido {{partido.id}} | Grupo: {{partido.grupo}}
+      <small float-right> {{partido.fecha | date:' dd-MM HH:mm' }}hs </small>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item>
+        <ion-avatar item-start>
+          <img [src]="partido.Equipo1.imagen">
+        </ion-avatar>
+        <h2 float-left>{{partido.Equipo1.nombre }}</h2>
+        <ion-badge *ngIf="partido.Prediccion != undefined" float-right> {{partido.Prediccion.goles1}} </ion-badge>
+        <h2 *ngIf="partido.jugado" item-end float-right>{{partido.goles1}}</h2>
+      </ion-item>
+      <ion-item>
+        <ion-avatar item-start>
+          <img [src]="partido.Equipo2.imagen">
+        </ion-avatar>
+        <h2 float-left>{{partido.Equipo2.nombre }}</h2>
+        <ion-badge *ngIf="partido.Prediccion != undefined" float-right> {{partido.Prediccion.goles2}} </ion-badge>
+        <h2 *ngIf="partido.jugado" item-end float-right>{{partido.goles2}}</h2>
+      </ion-item>
+      <ion-note> Texto de ejemplo </ion-note>
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>

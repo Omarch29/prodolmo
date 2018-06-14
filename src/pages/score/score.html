@@ -1,0 +1,22 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>score</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+<ion-list>
+  <ion-item *ngFor="let usuario of usuarios; index as i;">
+    <ion-avatar item-start (click)=CargarPrediccionesOtros(usuario); >
+      <img [src]="usuario.imagen">
+    </ion-avatar>
+    <h2  *ngIf="usuario.id != userSelected.id"float-left> {{usuario.nombre}}</h2>
+    <ion-badge  *ngIf="usuario.id == userSelected.id" float-left color="main"> <h2> {{usuario.nombre}} </h2></ion-badge>
+
+    <h2 float-right><strong>{{usuario.puntaje}} pts.</strong></h2>
+  </ion-item>
+</ion-list>
+</ion-content>

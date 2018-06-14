@@ -1,0 +1,89 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>cargar</ion-title>
+  </ion-navbar>
+
+</ion-header>
+<ion-content padding>
+  <h2>
+    Cargar tus predicciones:
+  </h2>
+
+  <button ion-button round float-left color="dark" (click)="cargarFecha(1)">Fecha 1</button>
+  <button ion-button round float-left color="dark" (click)="cargarFecha(2)">Fecha 2</button>
+  <button ion-button round float-left color="dark" (click)="cargarFecha(3)">Fecha 3</button>
+  <button ion-button round float-left color="dark" (click)="cargarFecha(4)">Octavos</button>
+  <button ion-button round float-left color="dark" (click)="cargarFecha(5)">Cuartos</button>
+  <button ion-button round float-left color="dark" (click)="cargarFecha(6)">Semi-Final</button>
+  <button ion-button round float-left color="dark" (click)="cargarFecha(7)">Tercer Puesto</button>
+  <button ion-button round float-left color="gold" icon-start (click)="cargarFecha(8)">
+    <ion-icon name="md-trophy"></ion-icon>
+    Final del Mundo</button>
+
+  <div *ngIf="PoseeDatosCargados == true">
+    <ion-item text-center round color="danger">
+      Ya cargaste los datos para esta fecha
+    </ion-item>
+  </div>
+
+  <div *ngIf="resultados.length > 0">
+    <ion-item text-center>
+      {{categoria}}
+    </ion-item>
+    <ion-card *ngFor="let partido of resultados ; index as i;">
+      <ion-card-header>
+        Partido {{partido.id}} | Grupo: {{partido.grupo}}
+        <small float-right> {{partido.fecha | date:' dd-MM HH:mm' }}hs </small>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-item>
+          <ion-avatar item-start>
+            <img [src]="partido.Equipo1.imagen">
+          </ion-avatar>
+          <h2 float-left>{{partido.Equipo1.nombre }}</h2>
+          <ion-badge large item-end>{{partido.prediccion1}}</ion-badge>
+          <button ion-button clear icon-only item-end color="secondary" (click)="add_goal(i,true)">
+            <ion-icon name="md-add-circle"></ion-icon>
+          </button>
+          <button ion-button clear icon-only item-end color="danger" (click)="rest_goal(i,true)">
+            <ion-icon name="md-remove-circle"></ion-icon>
+          </button>
+        </ion-item>
+        <ion-item>
+          <ion-avatar item-start>
+            <img [src]="partido.Equipo2.imagen">
+          </ion-avatar>
+          <h2 float-left>{{partido.Equipo2.nombre }}</h2>
+          <ion-badge large item-end>{{partido.prediccion2}}</ion-badge>
+          <button ion-button clear icon-only item-end color="secondary" (click)="add_goal(i,false)">
+            <ion-icon name="md-add-circle"></ion-icon>
+          </button>
+          <button ion-button clear icon-only item-end color="danger" (click)="rest_goal(i,false)">
+            <ion-icon name="md-remove-circle"></ion-icon>
+          </button>
+        </ion-item>
+        <ion-note> Texto de ejemplo </ion-note>
+      </ion-card-content>
+    </ion-card>
+
+    <button color="main" ion-button icon-start round full [disabled]="PoseeDatosCargados" (click)="guardar()">
+      <ion-icon name="md-archive"></ion-icon>
+      Guardar
+    </button>
+
+  </div>
+
+  <div *ngIf="!firstClick">
+    <ion-item text-center>
+      {{categoria}}
+    </ion-item>
+    <ion-card *ngIf="resultados.length == 0">
+      <ion-card-content>
+        <p>Todavía no hay datos cargados.</p>
+        <p>Banca la ansiedad rope.</p>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+</ion-content>

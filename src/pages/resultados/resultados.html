@@ -1,0 +1,40 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>resultados</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <h2>Partidos:</h2>
+  
+  <ion-card *ngFor="let partido of resultados ; index as i;">
+    <ion-card-header>
+      Partido {{partido.id}} | Grupo: {{partido.grupo}}
+      <small float-right> {{partido.fecha | date:' dd-MM HH:mm' }}hs </small>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item>
+        <ion-avatar item-start>
+          <img  [src]="partido.Equipo1.imagen">
+        </ion-avatar>
+        <h2 float-left>{{partido.Equipo1.nombre }}</h2>
+        <h2 *ngIf="partido.jugado" item-end float-right>{{partido.goles1}}</h2>
+      </ion-item>
+          <ion-item>
+            <ion-avatar item-start>
+              <img  [src]="partido.Equipo2.imagen">
+            </ion-avatar>
+            <h2 float-left>{{partido.Equipo2.nombre }}</h2>
+            <h2 *ngIf="partido.jugado" item-end float-right>{{partido.goles2}}</h2>
+          </ion-item>
+        <ion-note> Texto de ejemplo </ion-note>
+    </ion-card-content>
+  </ion-card>
+
+
+
+
+</ion-content>

@@ -1,0 +1,11 @@
+<ion-header>
+  <ion-navbar color="main">
+    <ion-title>{{userSelected.nombre}}</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-tabs color="main">
+  <ion-tab tabIcon="list-box" tabTitle="Ranking" [root]="tab1" [rootParams]="userParam"></ion-tab>
+  <ion-tab tabIcon="football" tabTitle="Resultados" [root]="tab2" [rootParams]="userParam"></ion-tab>
+  <ion-tab tabIcon="md-cloud-upload" tabTitle="Cargar" [root]="tab3" [rootParams]="userParam"></ion-tab>
+</ion-tabs>`
