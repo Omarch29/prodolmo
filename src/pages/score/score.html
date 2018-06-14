@@ -9,12 +9,14 @@
 
 <ion-content padding>
 <ion-list>
-  <ion-item *ngFor="let usuario of usuarios; index as i;">
+  <ion-item *ngFor="let usuario of usuarios | orderBy: 'puntaje' : true ; index as i;">
     <ion-avatar item-start (click)=CargarPrediccionesOtros(usuario); >
       <img [src]="usuario.imagen">
     </ion-avatar>
-    <h2  *ngIf="usuario.id != userSelected.id"float-left> {{usuario.nombre}}</h2>
-    <ion-badge  *ngIf="usuario.id == userSelected.id" float-left color="main"> <h2> {{usuario.nombre}} </h2></ion-badge>
+    <h2 padding-right float-left> {{i + 1}} |</h2>
+    <h2  padding-left *ngIf="usuario.id != userSelected.id"float-left> {{usuario.nombre | uppercase}}</h2>
+    <ion-badge padding-left *ngIf="usuario.id == userSelected.id" float-left color="main"> <h2> {{usuario.nombre | uppercase}} </h2></ion-badge>
+    <ion-icon padding-left *ngIf="i == 0" name="md-trophy"></ion-icon>
 
     <h2 float-right><strong>{{usuario.puntaje}} pts.</strong></h2>
   </ion-item>

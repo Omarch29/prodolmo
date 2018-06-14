@@ -61,20 +61,12 @@ export class ScorePage {
       });
     });
     
-  
-
-
-  }
-
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad ScorePage');
-
     // Calcular Puntajes
     this.usuariosObservable.subscribe(usuarios_observable => {
       usuarios_observable.forEach(usuario => {
         let puntaje: number = 0;
         let predicciones_x_usuario = this.predicciones.filter(predicciones => predicciones.usuario === usuario.id);
-        
+
         predicciones_x_usuario.forEach(prediccion => {
           let resultados_concretados = this.resultados
             .filter(x => x.jugado === true)
@@ -97,12 +89,18 @@ export class ScorePage {
 
         usuario['puntaje'] = puntaje;
         if (this.predicciones.length > 0) {
-          this.usuarios.push(usuario);  
+          this.usuarios.push(usuario);
         }
       });
     }, error => {
       console.log(error);
     });
+
+
+  }
+
+  ionViewDidLoad() {
+    console.log('ionViewDidLoad ScorePage');
 
   }
 
