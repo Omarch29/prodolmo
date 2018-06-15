@@ -60,7 +60,7 @@ export class ScorePage {
         return { id, ...data };
       });
     });
-    
+
     // Calcular Puntajes
     this.usuariosObservable.subscribe(usuarios_observable => {
       usuarios_observable.forEach(usuario => {
@@ -68,23 +68,25 @@ export class ScorePage {
         let predicciones_x_usuario = this.predicciones.filter(predicciones => predicciones.usuario === usuario.id);
 
         predicciones_x_usuario.forEach(prediccion => {
-          let resultados_concretados = this.resultados
-            .filter(x => x.jugado === true)
-            .forEach(resultado => {
-              let partido_jugado = prediccion.partidos.find(x => x.partido == resultado.id);
-              if (partido_jugado) {
-                //si el jugador adivino el resultado
-                if (partido_jugado.goles1 == resultado.goles1 && partido_jugado.goles2 == resultado.goles2) {
-                  puntaje = puntaje + 3;
-                } else {
-                  if ((partido_jugado.goles1 > partido_jugado.goles2) == (resultado.goles1 > resultado.goles2)) {
-                    puntaje = puntaje + 1;
-                  } else if (partido_jugado.goles1 == partido_jugado.goles2 && resultado.goles1 == resultado.goles2) {
-                    puntaje = puntaje + 1;
-                  }
+          let resultados_concretados = this.resultados.filter(x => x.jugado === true);
+          resultados_concretados.forEach(resultado_partido => {
+            let partido_prediccion = prediccion.partidos.find(x => x.partido == resultado_partido.id);
+            if (partido_prediccion) {
+              //si el jugador adivino el resultado del partido
+              if (partido_prediccion.goles1 == resultado_partido.goles1 && partido_prediccion.goles2 == resultado_partido.goles2) {
+                puntaje = puntaje + 3;
+              } else {
+                if (
+                  ((partido_prediccion.goles1 > partido_prediccion.goles2) && (resultado_partido.goles1 > resultado_partido.goles2)) ||
+                  ((partido_prediccion.goles1 < partido_prediccion.goles2) && (resultado_partido.goles1 < resultado_partido.goles2))
+                ) {
+                  puntaje = puntaje + 1;
+                } else if ((partido_prediccion.goles1 == partido_prediccion.goles2) && (resultado_partido.goles1 == resultado_partido.goles2)) {
+                  puntaje = puntaje + 1;
                 }
               }
-            });
+            }
+          });
         });
 
         usuario['puntaje'] = puntaje;
