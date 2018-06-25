@@ -7,6 +7,9 @@ import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/fires
 import { Observable } from 'rxjs';
 import { prediccion } from '../../models/prediccion';
 import { Partido } from '../../models/partido';
+import { ActionSheetController } from 'ionic-angular';
+
+
 
 @IonicPage()
 @Component({
@@ -24,9 +27,16 @@ export class OtroPage {
   partidosCollection: AngularFirestoreCollection<Partido>;
   partidosObservable: Observable<Partido[]>;
   resultados: Partido[] = [];
+  resultadosUnfiltered: Partido[] = [];
+  verJugados: boolean = false;
+  categoria: string = "todos";
 
-  
-  constructor(public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController, private afs: AngularFirestore) {
+
+  constructor(public navCtrl: NavController, public navParams: NavParams,
+    public viewCtrl: ViewController,
+    public afs: AngularFirestore,
+    public actionSheetCtrl: ActionSheetController) {
+
     // Cargar Paises
     this.paises = PAISES.slice(0);
 
@@ -49,8 +59,9 @@ export class OtroPage {
         return { id, ...data };
       });
     });
-    this.partidosObservable.subscribe(partidos_observable => partidos_observable.forEach(partido => {
-      // Merge Partidos
+    this.partidosObservable.subscribe(partidos_observable => {
+      partidos_observable.forEach(partido => {
+        // Merge Partidos
         partido['Equipo1'] = this.paises.find(pais => pais.id == partido.equipo1);
         partido['Equipo2'] = this.paises.find(pais => pais.id == partido.equipo2);
         this.predicciones.forEach(prediccion_partidos => {
@@ -59,8 +70,11 @@ export class OtroPage {
             partido['Prediccion'] = partido_encontrado;
           }
         });
-        this.resultados.push(partido);    
-    }));
+        this.resultadosUnfiltered.push(partido);
+      });
+      //Resultados sin filtros
+      this.resultados = this.resultadosUnfiltered;
+    });
 
   }
 
@@ -69,6 +83,85 @@ export class OtroPage {
     console.log('ionViewDidLoad OtroPage');
 
   }
+
+  mostrarFiltros() {
+    this.actionSheetCtrl.create({
+      title: 'Filtro',
+      buttons: [
+        {
+          text: 'Fecha 1',
+          handler: () => {
+            this.resultados = this.resultadosUnfiltered.filter(resultado => resultado.categoria == "1");
+            this.categoria = "Jornada 1";
+          }
+        },
+        {
+          text: 'Fecha 2',
+          handler: () => {
+            this.resultados = this.resultadosUnfiltered.filter(resultado => resultado.categoria == "2");
+            this.categoria = "Jornada 2";
+          }
+        },
+        {
+          text: 'Fecha 3',
+          handler: () => {
+            this.resultados = this.resultadosUnfiltered.filter(resultado => resultado.categoria == "3");
+            this.categoria = "Jornada 3";
+          }
+        },
+        {
+          text: 'Octavos',
+          handler: () => {
+            this.resultados = this.resultadosUnfiltered.filter(resultado => resultado.categoria == "octavos");
+            this.categoria = "Octavos de Final";
+          }
+        },
+        {
+          text: 'Cuartos',
+          handler: () => {
+            this.resultados = this.resultadosUnfiltered.filter(resultado => resultado.categoria == "cuartos");
+            this.categoria = "Cuartos de Final";
+          }
+        },
+        {
+          text: 'Semifinal',
+          handler: () => {
+            this.resultados = this.resultadosUnfiltered.filter(resultado => resultado.categoria == "semifinal");
+            this.categoria = "Semifinal";
+          }
+        },
+        {
+          text: 'Tercer Puesto',
+          handler: () => {
+            this.resultados = this.resultadosUnfiltered.filter(resultado => resultado.categoria == "tercer");
+            this.categoria = "Tercer Puesto";
+          }
+        },
+        {
+          text: 'Final',
+          handler: () => {
+            this.resultados = this.resultadosUnfiltered.filter(resultado => resultado.categoria == "final");
+            this.categoria = "Final del Mundo";
+          }
+        },
+        {
+          text: 'Todos',
+          handler: () => {
+            this.resultados = this.resultadosUnfiltered;
+            this.categoria = "Todos";
+          }
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+            console.log('Cancel clicked');
+          }
+        }
+      ]
+    }).present();
+  }
+
 
   cerrar() {
     this.viewCtrl.dismiss();
